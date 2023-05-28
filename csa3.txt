@@ -1,0 +1,55 @@
+   ;a/b + 1, a > b     
+   ;-425, a = b
+   ;(a*3 - b) / a, a < b  
+.MODEL tiny
+org 100h
+.data
+ a dw -1  
+ b dw 2
+ y dw 3
+ x dw 0 
+.code
+;-----------------------------
+mov ax, a
+mov bx, b   
+cmp ax, bx
+jl jmp label1
+jg jmp label2
+je jmp label3
+;-----------(a<b)-------------  
+label1:
+mov ax, a
+mov bx, y 
+imul bx  
+mov bx, b  
+sub ax, b  
+cwd 
+mov bx, a 
+idiv bx 
+        
+;idiv a 
+      
+;mov ax, a 
+;mov bx, 3
+;imul ax
+;sub ax, b 
+;cwd  
+;mov bx, a
+;idiv bx  
+jmp short ending
+;-----------(a>b)-------------
+label2: 
+mov ax, a
+mov bx, b
+cwd
+idiv bx
+add ax, 1
+jmp short ending
+;-----------(a=b)------------- 
+label3:
+mov ax, -425    
+jmp short ending
+;-----------------------------
+ending:
+mov x, ax
+ret

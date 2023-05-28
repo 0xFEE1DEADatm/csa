@@ -1,0 +1,37 @@
+org 100h
+
+.data
+array db 1, 2, 3, 4, 5, 11
+c dw 1
+d dw 10
+count dw 0
+
+.code
+main proc
+    mov ax, @data
+    mov ds, ax
+
+    mov cx, 5
+    lea si, array 
+
+    mov bx, c 
+    mov dx, d 
+
+    mov ax, 0 
+
+loop_start:
+    cmp byte ptr [si], bl 
+    jl not_counted 
+    cmp byte ptr [si], dl 
+    jg not_counted 
+    add al, byte ptr [si] 
+not_counted:
+    inc si 
+    loop loop_start 
+
+    mov count, ax 
+
+    mov ah, 4ch 
+    int 21h
+main endp
+end main

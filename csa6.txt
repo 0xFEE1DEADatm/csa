@@ -1,0 +1,60 @@
+org 100h
+
+.data
+size dw 6
+count db 0 
+c db 1
+d db 10
+array db 1, 2, 3, 4, 5, 11
+
+.code
+  mov ax, @data
+  mov ds, ax
+  cld
+  lea si, array
+  mov cx, [size]
+
+check:
+  lodsb
+  cmp al, [c]
+  jb next_elem
+  cmp al, [d]
+  ja next_elem
+  add [count], al 
+
+next_elem:
+  loop check
+
+  mov ah, 0 
+  mov al, [count]
+  call print
+
+  mov ah, 4ch
+  int 21h
+
+print proc
+  cmp ax, 0
+  jne print_
+  push ax
+  mov al, '0'
+  mov ah, 0eh
+  int 10h
+  pop ax
+  ret
+print_:
+  pusha
+  mov dx, 0
+  cmp ax, 0
+  je pn_done
+  mov bx, 10
+  div bx
+  call print_
+  mov al, dl
+  add al, 30h
+  mov ah, 0eh
+  int 10h
+  jmp pn_done
+pn_done:
+  popa
+  ret
+endp
